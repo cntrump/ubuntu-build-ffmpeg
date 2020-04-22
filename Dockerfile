@@ -45,8 +45,10 @@ RUN git clone --depth=1 -b v1.1.0 https://github.com/georgmartius/vid.stab.git \
     && cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_SHARED_LIBS=ON .. \
     && make && make install && cd ../.. && rm -rf ./vid.stab
 
-RUN git clone --depth=1 -b v1.3.15 https://github.com/Netflix/vmaf.git \
-    && cd ./vmaf && make && make install && cd .. && rm -rf ./vmaf
+RUN git clone --depth=1 -b v1.5.1 https://github.com/Netflix/vmaf.git \
+    && cd ./vmaf/libvmaf && mkdir ./build && cd ./build \
+    && ~/.local/bin/meson --prefix=/usr/local --default-library=shared .. \
+    && ninja && ninja install && cd ../../.. && rm -rf ./vmaf
 
 RUN svn co https://svn.code.sf.net/p/xavs/code/trunk xavs \
     && cd ./xavs && ./configure --prefix=/usr/local --enable-shared --disable-asm \
