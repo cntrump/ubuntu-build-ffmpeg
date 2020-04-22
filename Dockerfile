@@ -79,4 +79,4 @@ ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:/usr/local/lib:/usr/local/lib/x86_64-linux-
 
 RUN ldd /usr/local/bin/ffmpeg && /usr/local/bin/ffmpeg -version
 
-CMD /usr/local/bin/ffmpeg
+CMD ["/usr/local/bin/ffmpeg"]
