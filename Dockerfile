@@ -73,6 +73,6 @@ RUN curl -O https://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.bz2 \
             --extra-ldflags="-pthread -fprofile-arcs -ftest-coverage" \
     && make && make install && cd .. && rm -rf ./ffmpeg-${FFMPEG_VERSION}
 
-RUN /usr/local/bin/ffmpeg -version
+RUN ldd /usr/local/bin/ffmpeg && /usr/local/bin/ffmpeg -version
 
 CMD /usr/local/bin/ffmpeg
