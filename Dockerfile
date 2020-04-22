@@ -10,7 +10,7 @@ ARG DEP_PKGS="git curl build-essential automake libtool pkg-config yasm cmake li
                      libx265-dev libnuma-dev libxvidcore-dev libzmq3-dev libsodium-dev libpgm-dev \
                      libnorm-dev libzvbi-dev libssl-dev libfdk-aac-dev"
 
-RUN apt-get update && apt-get install ${DEP_PKGS} -y && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install ${DEP_PKGS} -y && apt-get clean
 
 RUN curl -O https://www.nasm.us/pub/nasm/releasebuilds/2.14.02/nasm-2.14.02.tar.bz2 \
     && tar -jxvf ./nasm-2.14.02.tar.bz2 && rm ./nasm-2.14.02.tar.bz2 \
