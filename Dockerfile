@@ -7,7 +7,7 @@ ARG DEP_PKGS="subversion liblzma-dev libass-dev libbluray-dev libgsm1-dev libmod
               libshine-dev libsnappy-dev libsoxr-dev libspeex-dev libtheora-dev libtwolame-dev \
               libvo-amrwbenc-dev libvorbis-dev libvpx-dev libwavpack-dev libwebp-dev libx264-dev \
               libx265-dev libnuma-dev libxvidcore-dev libzmq3-dev libsodium-dev libpgm-dev \
-              libnorm-dev libzvbi-dev libssl-dev libfdk-aac-dev"
+              libnorm-dev libzvbi-dev libfdk-aac-dev"
 
 RUN apt-get update && apt-get install ${DEP_PKGS} -y && apt-get clean
 
