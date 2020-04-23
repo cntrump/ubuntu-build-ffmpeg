@@ -2,7 +2,7 @@ FROM cntrump/ubuntu-toolchains:latest
 
 ARG FFMPEG_VERSION=4.2.2
 
-ARG DEP_PKGS="subversion liblzma-dev libass-dev libbluray-dev libgsm1-dev libmodplug-dev libmp3lame-dev \
+ARG DEP_PKGS="liblzma-dev libass-dev libbluray-dev libgsm1-dev libmodplug-dev libmp3lame-dev \
               libopencore-amrnb-dev libopencore-amrwb-dev libopus-dev librubberband-dev \
               libshine-dev libsnappy-dev libsoxr-dev libspeex-dev libtheora-dev libtwolame-dev \
               libvo-amrwbenc-dev libvorbis-dev libvpx-dev libwavpack-dev libwebp-dev libx264-dev \
@@ -42,7 +42,7 @@ RUN git clone --depth=1 -b v1.5.1 https://github.com/Netflix/vmaf.git \
     && ~/.local/bin/meson --prefix=/usr/local --default-library=shared .. \
     && ninja && ninja install && cd ../../.. && rm -rf ./vmaf
 
-RUN svn co https://svn.code.sf.net/p/xavs/code/trunk xavs \
+RUN git clone --depth=1 https://github.com/cntrump/xavs.git \
     && cd ./xavs && ./configure --prefix=/usr/local --enable-shared --disable-asm \
     && make && make install && cd .. && rm -rf ./xavs
 
