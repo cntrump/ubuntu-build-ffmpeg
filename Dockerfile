@@ -1,23 +1,15 @@
-FROM ubuntu:18.04
+FROM cntrump/ubuntu-toolchains:latest
 
 ARG FFMPEG_VERSION=4.2.2
 
-ARG DEP_PKGS="git curl build-essential automake libtool pkg-config yasm cmake liblzma-dev ninja-build \
-                     subversion python3-pip libass-dev libbluray-dev libgsm1-dev libmodplug-dev libmp3lame-dev \
-                     libopencore-amrnb-dev libopencore-amrwb-dev libopus-dev librubberband-dev \
-                     libshine-dev libsnappy-dev libsoxr-dev libspeex-dev libtheora-dev libtwolame-dev \
-                     libvo-amrwbenc-dev libvorbis-dev libvpx-dev libwavpack-dev libwebp-dev libx264-dev \
-                     libx265-dev libnuma-dev libxvidcore-dev libzmq3-dev libsodium-dev libpgm-dev \
-                     libnorm-dev libzvbi-dev libssl-dev libfdk-aac-dev"
+ARG DEP_PKGS="subversion liblzma-dev libass-dev libbluray-dev libgsm1-dev libmodplug-dev libmp3lame-dev \
+              libopencore-amrnb-dev libopencore-amrwb-dev libopus-dev librubberband-dev \
+              libshine-dev libsnappy-dev libsoxr-dev libspeex-dev libtheora-dev libtwolame-dev \
+              libvo-amrwbenc-dev libvorbis-dev libvpx-dev libwavpack-dev libwebp-dev libx264-dev \
+              libx265-dev libnuma-dev libxvidcore-dev libzmq3-dev libsodium-dev libpgm-dev \
+              libnorm-dev libzvbi-dev libssl-dev libfdk-aac-dev"
 
 RUN apt-get update && apt-get install ${DEP_PKGS} -y && apt-get clean
-
-RUN curl -O https://www.nasm.us/pub/nasm/releasebuilds/2.14.02/nasm-2.14.02.tar.bz2 \
-    && tar -jxvf ./nasm-2.14.02.tar.bz2 && rm ./nasm-2.14.02.tar.bz2 \
-    && cd ./nasm-2.14.02 && ./configure --prefix=/usr/local \
-    && make && make install && cd .. && rm -rf ./nasm-2.14.02
-
-RUN pip3 install --user meson
 
 RUN git clone --depth=1 -b v1.0.0 https://aomedia.googlesource.com/aom \
     && cd ./aom/build && cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_SHARED_LIBS=ON -DENABLE_TESTS=OFF .. \
