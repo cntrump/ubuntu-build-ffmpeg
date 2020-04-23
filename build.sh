@@ -3,7 +3,7 @@
 set -e
 
 DEP_PKGS="git curl build-essential automake libtool pkg-config yasm cmake liblzma-dev ninja-build \
-                     subversion python3-pip libass-dev libbluray-dev libgsm1-dev libmodplug-dev libmp3lame-dev \
+                     python3-pip libass-dev libbluray-dev libgsm1-dev libmodplug-dev libmp3lame-dev \
                      libopencore-amrnb-dev libopencore-amrwb-dev libopus-dev librubberband-dev \
                      libshine-dev libsnappy-dev libsoxr-dev libspeex-dev libtheora-dev libtwolame-dev \
                      libvo-amrwbenc-dev libvorbis-dev libvpx-dev libwavpack-dev libwebp-dev libx264-dev \
@@ -50,7 +50,7 @@ git clone --depth=1 -b v1.5.1 https://github.com/Netflix/vmaf.git \
     && ~/.local/bin/meson --prefix=/usr/local --default-library=shared .. \
     && ninja && sudo ninja install && cd ../../.. && rm -rf ./vmaf
 
-svn co https://svn.code.sf.net/p/xavs/code/trunk xavs \
+git clone --depth=1 https://github.com/cntrump/xavs.git \
     && cd ./xavs && ./configure --prefix=/usr/local --enable-shared --disable-asm \
     && make && sudo make install && cd .. && rm -rf ./xavs
 
