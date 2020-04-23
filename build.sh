@@ -72,7 +72,7 @@ curl -O https://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.bz2 \
             --enable-libvidstab --enable-libvmaf --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpx \
             --enable-libwavpack --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs \
             --enable-libxvid --enable-libzimg --enable-libzmq --enable-libzvbi --enable-version3 \
-            --disable-ffplay \
+            --disable-ffplay --enable-small \
             --enable-nonfree --enable-openssl --enable-libfdk-aac \
             --extra-ldflags="-pthread -fprofile-arcs -ftest-coverage" \
     && make && sudo make install && cd .. && rm -rf ./ffmpeg-${FFMPEG_VERSION}
