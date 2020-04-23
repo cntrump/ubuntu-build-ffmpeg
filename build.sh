@@ -2,6 +2,8 @@
 
 set -e
 
+FFMPEG_VERSION=4.2.2
+
 DEP_PKGS="git curl build-essential automake libtool pkg-config yasm cmake liblzma-dev ninja-build \
                      python3-pip libass-dev libbluray-dev libgsm1-dev libmodplug-dev libmp3lame-dev \
                      libopencore-amrnb-dev libopencore-amrwb-dev libopus-dev librubberband-dev \
