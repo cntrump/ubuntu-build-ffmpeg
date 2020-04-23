@@ -9,7 +9,7 @@ ARG DEP_PKGS="subversion liblzma-dev libass-dev libbluray-dev libgsm1-dev libmod
               libx265-dev libnuma-dev libxvidcore-dev libzmq3-dev libsodium-dev libpgm-dev \
               libnorm-dev libzvbi-dev libfdk-aac-dev"
 
-RUN apt-get update && apt-get install ${DEP_PKGS} -y && apt-get clean
+RUN apt-get update && apt-get install ${DEP_PKGS} -y && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN git clone --depth=1 -b v1.0.0 https://aomedia.googlesource.com/aom \
     && cd ./aom/build && cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_SHARED_LIBS=ON -DENABLE_TESTS=OFF .. \
