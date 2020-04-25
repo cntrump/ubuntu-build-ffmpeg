@@ -1,6 +1,6 @@
-FROM cntrump/ubuntu-toolchains:latest
+FROM ubuntu:20.04 AS base
 
-ARG FFMPEG_VERSION=4.2.2
+ENV DEBIAN_FRONTEND=noninteractive
 
 ARG DEP_PKGS="liblzma-dev libass-dev libbluray-dev libgsm1-dev libmodplug-dev libmp3lame-dev \
               libopencore-amrnb-dev libopencore-amrwb-dev libopus-dev librubberband-dev \
@@ -10,6 +10,12 @@ ARG DEP_PKGS="liblzma-dev libass-dev libbluray-dev libgsm1-dev libmodplug-dev li
               libnorm-dev libzvbi-dev libfdk-aac-dev"
 
 RUN apt-get update && apt-get install ${DEP_PKGS} -y && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+FROM cntrump/ubuntu-toolchains:latest AS builder
+
+COPY --from=base / /
+
+ARG FFMPEG_VERSION=4.2.2
 
 RUN git clone --depth=1 -b v1.0.0 https://aomedia.googlesource.com/aom \
     && cd ./aom/build && cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_SHARED_LIBS=ON -DENABLE_TESTS=OFF .. \
@@ -65,6 +71,12 @@ RUN curl -O https://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.bz2 \
             --disable-ffplay --enable-nonfree --enable-openssl --enable-libfdk-aac \
             --extra-ldflags="-pthread -fprofile-arcs -ftest-coverage" \
     && make && make install && cd .. && rm -rf ./ffmpeg-${FFMPEG_VERSION}
+
+FROM base
+
+ENV LD_LIBRARY_PATH /usr/local/lib:/usr/local/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+
+COPY --from=builder /usr/local /usr/local
 
 RUN ldd /usr/local/bin/ffmpeg && /usr/local/bin/ffmpeg -version
 
