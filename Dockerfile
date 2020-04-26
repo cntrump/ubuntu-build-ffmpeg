@@ -1,6 +1,4 @@
-FROM ubuntu:20.04 AS base
-
-ENV DEBIAN_FRONTEND=noninteractive
+FROM cntrump/ubuntu-template:20.04 AS base
 
 ARG DEP_PKGS="liblzma-dev libass-dev libbluray-dev libgsm1-dev libmodplug-dev libmp3lame-dev \
               libopencore-amrnb-dev libopencore-amrwb-dev libopus-dev librubberband-dev \
@@ -11,7 +9,7 @@ ARG DEP_PKGS="liblzma-dev libass-dev libbluray-dev libgsm1-dev libmodplug-dev li
 
 RUN apt-get update && apt-get install ${DEP_PKGS} -y && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-FROM cntrump/ubuntu-toolchains:latest AS builder
+FROM cntrump/ubuntu-toolchains:20.04 AS builder
 
 COPY --from=base / /
 
@@ -73,8 +71,6 @@ RUN curl -O https://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.bz2 \
     && make && make install && cd .. && rm -rf ./ffmpeg-${FFMPEG_VERSION}
 
 FROM base
-
-ENV LD_LIBRARY_PATH /usr/local/lib:/usr/local/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
 
 COPY --from=builder /usr/local /usr/local
 
