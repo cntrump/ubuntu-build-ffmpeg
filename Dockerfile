@@ -59,8 +59,6 @@ RUN git clone --depth=1 -b release-2.9.3 https://github.com/sekrit-twc/zimg.git 
     && cd ./zimg && ./autogen.sh && STL_LIBS="-lstdc++ -lm" ./configure --prefix=/usr/local --enable-shared --disable-static \
     && make && make install && cd .. && rm -rf ./zimg
 
-ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/local/lib/x86_64-linux-gnu/pkgconfig:$PKG_CONFIG_PATH
-
 RUN curl -O https://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.bz2 \
     && tar -jxvf ./ffmpeg-${FFMPEG_VERSION}.tar.bz2 && rm ./ffmpeg-${FFMPEG_VERSION}.tar.bz2 \
     && cd ./ffmpeg-${FFMPEG_VERSION} \
