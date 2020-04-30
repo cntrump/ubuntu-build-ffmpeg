@@ -3,6 +3,7 @@
 - Base on static library recommended by ffmpeg.org: [Static builds for macOS 64-bit](https://evermeet.cx/ffmpeg/)
 - Add AAC support
 - Add SSL support (with [OpenSSL](https://www.openssl.org))
+- Build with clang
 
 ### Configuration
 

@@ -15,13 +15,18 @@ COPY --from=base / /
 
 ARG FFMPEG_VERSION=4.2.2
 
+ENV CC=/usr/bin/clang-10
+ENV CPP=/usr/bin/clang-cpp-10
+ENV CXX=/usr/bin/clang++-10
+ENV LD=/usr/bin/ld.lld-10
+
 RUN git clone --depth=1 -b v1.0.0 https://aomedia.googlesource.com/aom \
     && cd ./aom/build && cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_SHARED_LIBS=ON -DENABLE_TESTS=OFF .. \
     && make && make install && cd ../.. && rm -rf ./aom
 
 RUN git clone --depth=1 -b 0.6.0 https://code.videolan.org/videolan/dav1d.git \
     && cd ./dav1d && mkdir ./build && cd ./build \
-    && ~/.local/bin/meson --prefix=/usr/local --default-library=shared .. \
+    && meson --prefix=/usr/local --default-library=shared .. \
     && ninja && ninja install && cd ../.. && rm -rf ./dav1d
 
 RUN git clone --depth=1 -b v2.1.0 https://github.com/cisco/openh264.git \
@@ -43,7 +48,7 @@ RUN git clone --depth=1 -b v1.1.0 https://github.com/georgmartius/vid.stab.git \
 
 RUN git clone --depth=1 -b v1.5.1 https://github.com/Netflix/vmaf.git \
     && cd ./vmaf/libvmaf && mkdir ./build && cd ./build \
-    && ~/.local/bin/meson --prefix=/usr/local --default-library=shared .. \
+    && meson --prefix=/usr/local --default-library=shared .. \
     && ninja && ninja install && cd ../../.. && rm -rf ./vmaf
 
 RUN git clone --depth=1 https://github.com/cntrump/xavs.git \
@@ -54,10 +59,12 @@ RUN git clone --depth=1 -b release-2.9.3 https://github.com/sekrit-twc/zimg.git 
     && cd ./zimg && ./autogen.sh && STL_LIBS="-lstdc++ -lm" ./configure --prefix=/usr/local --enable-shared --disable-static \
     && make && make install && cd .. && rm -rf ./zimg
 
+ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/local/lib/x86_64-linux-gnu/pkgconfig:$PKG_CONFIG_PATH
+
 RUN curl -O https://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.bz2 \
     && tar -jxvf ./ffmpeg-${FFMPEG_VERSION}.tar.bz2 && rm ./ffmpeg-${FFMPEG_VERSION}.tar.bz2 \
     && cd ./ffmpeg-${FFMPEG_VERSION} \
-    && ./configure --cc=/usr/bin/gcc --prefix=/usr/local --extra-version=lvv.me \
+    && ./configure --prefix=/usr/local --extra-version=lvv.me \
             --enable-avisynth --enable-fontconfig --enable-gpl --enable-libaom --enable-libass \
             --enable-libbluray --enable-libdav1d --enable-libfreetype --enable-libgsm --enable-libmodplug \
             --enable-libmp3lame --enable-libmysofa --enable-libopencore-amrnb --enable-libopencore-amrwb \
@@ -67,12 +74,15 @@ RUN curl -O https://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.bz2 \
             --enable-libwavpack --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs \
             --enable-libxvid --enable-libzimg --enable-libzmq --enable-libzvbi --enable-version3 \
             --disable-ffplay --enable-nonfree --enable-openssl --enable-libfdk-aac \
-            --extra-ldflags="-pthread -fprofile-arcs -ftest-coverage" \
+            --extra-ldflags="-pthread -fprofile-arcs -ftest-coverage -lomp" \
+            --cc=${CC} \
+            --cxx=${CXX} \
     && make && make install && cd .. && rm -rf ./ffmpeg-${FFMPEG_VERSION}
 
 FROM base
 
 COPY --from=builder /usr/local /usr/local
+COPY --from=builder /lib/x86_64-linux-gnu/libomp.so.5 /lib/x86_64-linux-gnu/libomp.so.5
 
 RUN ldd /usr/local/bin/ffmpeg && /usr/local/bin/ffmpeg -version
 

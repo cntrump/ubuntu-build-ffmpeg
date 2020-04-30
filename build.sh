@@ -19,7 +19,12 @@ curl -O https://www.nasm.us/pub/nasm/releasebuilds/2.14.02/nasm-2.14.02.tar.bz2 
     && cd ./nasm-2.14.02 && ./configure --prefix=/usr/local \
     && make && sudo make install && cd .. && rm -rf ./nasm-2.14.02
 
-pip3 install --user meson
+sudo pip3 install meson
+
+export CC=/usr/bin/clang-10
+export CPP=/usr/bin/clang-cpp-10
+export CXX=/usr/bin/clang++-10
+export LD=/usr/bin/ld.lld-10
 
 git clone --depth=1 -b v1.0.0 https://aomedia.googlesource.com/aom \
     && cd ./aom/build && cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_SHARED_LIBS=ON -DENABLE_TESTS=OFF .. \
@@ -27,7 +32,7 @@ git clone --depth=1 -b v1.0.0 https://aomedia.googlesource.com/aom \
 
 git clone --depth=1 -b 0.6.0 https://code.videolan.org/videolan/dav1d.git \
     && cd ./dav1d && mkdir ./build && cd ./build \
-    && ~/.local/bin/meson --prefix=/usr/local --default-library=shared .. \
+    && meson --prefix=/usr/local --default-library=shared .. \
     && ninja && sudo ninja install && cd ../.. && rm -rf ./dav1d
 
 git clone --depth=1 -b v2.1.0 https://github.com/cisco/openh264.git \
@@ -49,7 +54,7 @@ git clone --depth=1 -b v1.1.0 https://github.com/georgmartius/vid.stab.git \
 
 git clone --depth=1 -b v1.5.1 https://github.com/Netflix/vmaf.git \
     && cd ./vmaf/libvmaf && mkdir ./build && cd ./build \
-    && ~/.local/bin/meson --prefix=/usr/local --default-library=shared .. \
+    && meson --prefix=/usr/local --default-library=shared .. \
     && ninja && sudo ninja install && cd ../../.. && rm -rf ./vmaf
 
 git clone --depth=1 https://github.com/cntrump/xavs.git \
@@ -60,10 +65,12 @@ git clone --depth=1 -b release-2.9.3 https://github.com/sekrit-twc/zimg.git \
     && cd ./zimg && ./autogen.sh && STL_LIBS="-lstdc++ -lm" ./configure --prefix=/usr/local --enable-shared --disable-static \
     && make && sudo make install && cd .. && rm -rf ./zimg
 
+export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/local/lib/x86_64-linux-gnu/pkgconfig:$PKG_CONFIG_PATH
+
 curl -O https://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.bz2 \
     && tar -jxvf ./ffmpeg-${FFMPEG_VERSION}.tar.bz2 && rm ./ffmpeg-${FFMPEG_VERSION}.tar.bz2 \
     && cd ./ffmpeg-${FFMPEG_VERSION} \
-    && ./configure --cc=/usr/bin/gcc --prefix=/usr/local --extra-version=lvv.me \
+    && ./configure --prefix=/usr/local --extra-version=lvv.me \
             --enable-avisynth --enable-fontconfig --enable-gpl --enable-libaom --enable-libass \
             --enable-libbluray --enable-libdav1d --enable-libfreetype --enable-libgsm --enable-libmodplug \
             --enable-libmp3lame --enable-libmysofa --enable-libopencore-amrnb --enable-libopencore-amrwb \
@@ -74,10 +81,12 @@ curl -O https://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.bz2 \
             --enable-libxvid --enable-libzimg --enable-libzmq --enable-libzvbi --enable-version3 \
             --disable-ffplay --enable-small \
             --enable-nonfree --enable-openssl --enable-libfdk-aac \
-            --extra-ldflags="-pthread -fprofile-arcs -ftest-coverage" \
+            --extra-ldflags="-pthread -fprofile-arcs -ftest-coverage -lomp" \
+            --cc=${CC} \
+            --cxx=${CXX} \
     && make && sudo make install && cd .. && rm -rf ./ffmpeg-${FFMPEG_VERSION}
 
-sudo sh -c "echo -e \"/usr/local/lib\n/usr/local/lib/x86_64-linux-gnu\" > /etc/ld.so.conf.d/ffmpeg.conf" \
+sudo sh -c "echo -e \"/usr/local/lib\n/usr/local/lib/x86_64-linux-gnu\" > /etc/ld.so.conf.d/local.so.conf" \
 && sudo ldconfig
 
 ldd /usr/local/bin/ffmpeg && /usr/local/bin/ffmpeg -version
