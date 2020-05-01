@@ -15,11 +15,6 @@ COPY --from=base / /
 
 ARG FFMPEG_VERSION=4.2.2
 
-ENV CC=/usr/bin/clang-10
-ENV CPP=/usr/bin/clang-cpp-10
-ENV CXX=/usr/bin/clang++-10
-ENV LD=/usr/bin/ld.lld-10
-
 RUN git clone --depth=1 -b v1.0.0 https://aomedia.googlesource.com/aom \
     && cd ./aom/build && cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_SHARED_LIBS=ON -DENABLE_TESTS=OFF .. \
     && make && make install && cd ../.. && rm -rf ./aom
