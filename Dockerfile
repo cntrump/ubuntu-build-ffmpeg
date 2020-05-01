@@ -82,6 +82,6 @@ FROM base
 COPY --from=builder /usr/local /usr/local
 COPY --from=builder /lib/x86_64-linux-gnu/libomp.so.5 /lib/x86_64-linux-gnu/libomp.so.5
 
-RUN ldd /usr/local/bin/ffmpeg && /usr/local/bin/ffmpeg -version
+RUN ldconfig && ldd /usr/local/bin/ffmpeg && ffmpeg -version
 
-CMD ["/usr/local/bin/ffmpeg"]
+CMD ["ffmpeg"]
