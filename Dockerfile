@@ -13,7 +13,7 @@ FROM cntrump/ubuntu-toolchains:20.04 AS builder
 
 COPY --from=base / /
 
-ARG FFMPEG_VERSION=4.2.2
+ARG FFMPEG_VERSION=4.2.3
 
 RUN git clone --depth=1 -b v1.0.0 https://aomedia.googlesource.com/aom \
     && cd ./aom/build && cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_SHARED_LIBS=ON -DENABLE_TESTS=OFF .. \
