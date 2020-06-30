@@ -13,7 +13,7 @@ FROM cntrump/ubuntu-toolchains:20.04 AS builder
 
 COPY --from=base / /
 
-ARG FFMPEG_VERSION=4.2.3
+ARG FFMPEG_VERSION=4.3
 
 RUN git clone --depth=1 -b v1.0.0 https://aomedia.googlesource.com/aom \
     && cd ./aom/build && cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_SHARED_LIBS=ON -DENABLE_TESTS=OFF .. \
@@ -53,6 +53,10 @@ RUN git clone --depth=1 https://github.com/cntrump/xavs.git \
 RUN git clone --depth=1 -b release-2.9.3 https://github.com/sekrit-twc/zimg.git \
     && cd ./zimg && ./autogen.sh && STL_LIBS="-lstdc++ -lm" ./configure --prefix=/usr/local --enable-shared --disable-static \
     && make && make install && cd .. && rm -rf ./zimg
+
+RUN git clone --depth=1 -b v3.6.1 https://github.com/AviSynth/AviSynthPlus.git \
+    && cd ./AviSynthPlus && mkdir ./avisynth-build && cd ./avisynth-build && cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DHEADERS_ONLY:bool=on .. \
+    && make install && cd ../.. && rm -rf ./AviSynthPlus
 
 RUN curl -O https://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.bz2 \
     && tar -jxvf ./ffmpeg-${FFMPEG_VERSION}.tar.bz2 && rm ./ffmpeg-${FFMPEG_VERSION}.tar.bz2 \
