@@ -26,7 +26,7 @@ ffmpeg installed to
 
 ### Docker Image
 
-`docker pull cntrump/ubuntu-ffmpeg:v4.2.2`
+`docker pull cntrump/ubuntu-ffmpeg:v4.3`
 
 Run FFmpeg
 
