@@ -9,11 +9,11 @@ ARG DEP_PKGS="liblzma-dev libass-dev libbluray-dev libgsm1-dev libmodplug-dev li
 
 RUN apt-get update && apt-get install ${DEP_PKGS} -y && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-FROM cntrump/ubuntu-toolchains:20.04 AS builder
+FROM cntrump/ubuntu-toolchains:latest AS builder
 
 COPY --from=base / /
 
-ARG FFMPEG_VERSION=4.3
+ARG FFMPEG_VERSION=4.3.1
 
 RUN git clone --depth=1 -b v1.0.0 https://aomedia.googlesource.com/aom \
     && cd ./aom/build && cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_SHARED_LIBS=ON -DENABLE_TESTS=OFF .. \
