@@ -2,7 +2,7 @@
 
 set -e
 
-FFMPEG_VERSION=4.2.2
+FFMPEG_VERSION=4.3.2
 
 DEP_PKGS="git curl build-essential automake libtool pkg-config yasm cmake liblzma-dev ninja-build \
                      python3-pip libass-dev libbluray-dev libgsm1-dev libmodplug-dev libmp3lame-dev \
@@ -64,6 +64,10 @@ git clone --depth=1 https://github.com/cntrump/xavs.git \
 git clone --depth=1 -b release-2.9.3 https://github.com/sekrit-twc/zimg.git \
     && cd ./zimg && ./autogen.sh && STL_LIBS="-lstdc++ -lm" ./configure --prefix=/usr/local --enable-shared --disable-static \
     && make && sudo make install && cd .. && rm -rf ./zimg
+
+git clone --depth=1 -b v3.7.0 https://github.com/AviSynth/AviSynthPlus.git \
+    && cd ./AviSynthPlus && mkdir ./avisynth-build && cd ./avisynth-build \
+    && cmake ../ -DHEADERS_ONLY:bool=on && make install && cd .. && rm -rf ./AviSynthPlus
 
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/local/lib/x86_64-linux-gnu/pkgconfig:$PKG_CONFIG_PATH
 
